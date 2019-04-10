@@ -1,0 +1,83 @@
+
+extends layout
+block content
+	.container
+		.row
+			.col-md-8
+				section#login
+					h1.entry-title
+						span Sign In
+					hr
+					form#signin.form-horizontal(method='post')
+						.form-group
+							label.control-label.col-sm-3
+								| Email ID
+								span.text-danger *
+							.col-md-6.col-sm-9
+								.input-group
+									span.input-group-addon
+										i.glyphicon.glyphicon-envelope
+									input.form-control(type='email' id='email-tf' name='email' placeholder='Enter your Email ID' value='')
+								//small
+								//	| Your Email Id is being used for ensuring the security of your account, authorization
+								//	| and access recovery.
+						.form-group
+							label.control-label.col-sm-3
+								| Password
+								span.text-danger *
+							.col-md-6.col-sm-8
+								.input-group
+									span.input-group-addon
+										i.glyphicon.glyphicon-lock
+									input.form-control(type='password' id='pass-tf' name='pass' placeholder='Choose password (5-15 chars)' value='')
+						//.form-group
+						//	.col-xs-offset-3.col-md-8.col-sm-9
+						//		span.text-muted
+						//			span.label.label-danger Note:-
+						//			|  By clicking Sign Up, you agree to our
+						//			a(href='#') Terms
+						//			|  and that you have read our
+						//			a(href='#') Policy
+						//			| , including our
+						//			a(href='#') Cookie Use
+						//			| .
+						.form-group
+							.col-xs-offset-3.col-md-2
+								input.btn.btn-primary(name='Submit' type='submit' value='Sign In')
+							#create-account.col-md-2
+								a.btn.btn-success(href='/signup') Sign Up
+							#forgot-password.col-md-2
+								a(href='#') reset password
+
+	//#login.center-vertical
+	//	form.card.card-body.bg-light(method='post')
+	//		h2 Hello!
+	//		h6 Please Login To Your Account
+	//		.form-group
+	//			label Username
+	//			input.form-control(type='text', id='user-tf', name='user')
+	//		.form-group
+	//			label Password
+	//			input.form-control(type='password', id='pass-tf', name='pass')
+	//		#row1
+	//			button(type='button')#btn_remember.btn.btn-light.btn-left
+	//				span.fa.fa-check-square
+	//				| Remember Me
+	//			button(type='submit')#btn_sign_in.btn.btn-primary
+	//				span.fa.fa-lock
+	//				| Sign In
+	//		hr
+	//		.btm-links
+	//			#forgot-password
+	//				a(href='#') Forgot Your Password?
+	//			#create-account
+	//				a(href='/signup') Create An Account
+
+	include modals/alert
+	include modals/lost-password
+
+block scripts
+	script(src='/js/views/login.js')
+	script(src='/js/controllers/loginController.js')
+	script(src='/js/form-validators/loginValidator.js')
+	script(src='/js/form-validators/emailValidator.js')

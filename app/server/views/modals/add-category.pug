@@ -1,0 +1,17 @@
+
+#add-category.modal.fade(tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true")
+	.modal-dialog
+		.modal-content
+			.modal-header
+				button.close(type='button', data-dismiss='modal', aria-hidden='true')
+					i.material-icons clear
+				h4.modal-title Add Category
+			.modal-body#userform
+				form#userFrm(method="post")
+					.form-group
+						label name or alias
+						input.form-control(type='text' id='name-tf' name='name'  value='').required
+						.alert.alert-danger.hide
+					input.btn.btn-primary(style='float:right', name='Submit' type='submit' value='Save')
+			.modal-footer
+				//button(type="submit" form="add-user-form")#add-user-submit.btn.btn-primary Save

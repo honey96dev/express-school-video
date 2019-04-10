@@ -1,0 +1,22 @@
+// - user = typeof(udata) != 'undefined' ? udata : { }
+// store the userId on the client side in a hidden input field //
+input(type='hidden', value= '')#categoryId
+input(type='hidden', value= '')#mainPageUrl
+
+#edit-category.modal.fade(tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true")
+	.modal-dialog
+		.modal-content
+			.modal-header
+				button.close(type='button', data-dismiss='modal', aria-hidden='true')
+					i.material-icons clear
+				h4.modal-title Add Category
+			.modal-body#editform
+				form#editCategoryFrm(method="post")
+					.form-group
+						label name or alias
+						input.form-control(type='text' id='edit-name-tf' name='name'  value='' data-validation="length" data-validation-length="min4").required
+						.alert.alert-danger.hide
+					input#editBtn.btn.btn-primary(style='float:right' name='Submit' type='submit' value='Update')
+				#loginResult.col-12.mb-3
+			.modal-footer
+				//button(type="submit" form="add-user-form")#add-user-submit.btn.btn-primary Save

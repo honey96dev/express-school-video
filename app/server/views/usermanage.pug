@@ -1,0 +1,104 @@
+extends main_layout
+
+block content
+	- users = typeof(udata) != 'undefined' ? udata : { }
+	.wrapper
+		.sidebar(data-active-color='rose' data-background-color='black' data-image='../../assets/img/sidebar-1.jpg')
+			.logo
+				a.simple-text(href='/')
+					| Video Class
+			.logo.logo-mini
+				a.simple-text(href='/')
+					| V C
+			.sidebar-wrapper
+				ul.nav
+					li.active
+						a(href='./usermanage')
+							i.material-icons dashboard
+							p Gestión de Usuarios
+					li
+						a(href='/category')
+							i.material-icons widgets
+							p Categorías
+		.main-panel
+			nav.navbar.navbar-transparent.navbar-absolute
+				.container-fluid
+					.navbar-minimize
+						button#minimizeSidebar.btn.btn-round.btn-white.btn-fill.btn-just-icon
+							i.material-icons.visible-on-sidebar-regular more_vert
+							i.material-icons.visible-on-sidebar-mini view_list
+					.navbar-header
+						button.navbar-toggle(type='button' data-toggle='collapse')
+							span.sr-only Toggle navigation
+							span.icon-bar
+							span.icon-bar
+							span.icon-bar
+						a.navbar-brand(href='#')  gestión de usuarios
+					.collapse.navbar-collapse
+						ul.nav.navbar-nav.navbar-right
+							li
+								a.btn.btn-primary#btn-logout(href='/logout') Log Out
+			.content
+				.container-fluid
+					.row
+						.col-md-12
+							.card
+								.card-header.card-header-icon(data-background-color='purple')
+									i.material-icons assignment
+								.card-content
+									h4.card-title User list
+									.toolbar
+										button.btn.btn-info(type='button' data-toggle="modal" data-target="#add-user" style='float: right; margin-right: 20px;' onclick="")
+											i.material-icons add
+											| Add User
+									.material-datatables
+										table#datatables.table.table-striped.table-no-bordered.table-hover(cellspacing='0', width='100%', style='width:100%')
+											thead
+												tr
+													th Email
+													th Nombre o Alias
+													th Fecha De Creacion
+													th Ultima Fecha De Acceso
+													th Estatus
+													th Token
+													th.disabled-sorting.text-center Actions
+											tbody
+												if users.length
+													each item in users
+														tr
+															td #{item['email']}
+															td #{item['name']}
+															td #{item['date']}
+															td #{item['udate']}
+															td
+																a.btn.btn-simple.btn-info.btn-icon.like(href='/useractive?id='+item["_id"])
+																	i.material-icons lock_open
+															td #{item['token']}
+															td.text-center
+																a.btn.btn-simple.btn-warning.btn-icon.edit(href='', data-id=item["_id"] data-toggle="modal" data-target="#edit-user" onclick='setEditUser(this)')
+																	i.material-icons edit
+																a.btn.btn-simple.btn-danger.btn-icon.remove(href='/userdel?id='+item["_id"], onclick='return confirm("You are going to delete this record. Continue?")')
+																	i.material-icons delete
+
+
+			footer.footer
+				.container-fluid
+					p.copyright.pull-right
+						| &copy;
+						script.
+							document.write(new Date().getFullYear())
+						a(href='/') Creative Tim
+						| , made with love for a better web
+
+	//include account
+	include modals/add-user
+	include modals/edit-user
+	include modals/alert
+	include modals/confirm
+
+block scripts
+	script(src='/js/views/user.js')
+	script(src='/js/controllers/homeController.js')
+	script(src='/js/form-validators/loginValidator.js')
+	script(src='/js/form-validators/emailValidator.js')
+	//script(src='/js/form-validators/accountValidator.js')

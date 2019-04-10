@@ -1,0 +1,95 @@
+extends main_layout
+
+block content
+	- users = typeof(udata) != 'undefined' ? udata : { }
+	.wrapper
+		.sidebar(data-active-color='rose' data-background-color='black' data-image='../../assets/img/sidebar-1.jpg')
+			.logo
+				a.simple-text(href='/')
+					| Video Class
+			.logo.logo-mini
+				a.simple-text(href='/')
+					| V C
+			.sidebar-wrapper
+				ul.nav
+					li
+						a(href='/usermanage')
+							i.material-icons dashboard
+							p User Manage
+					li.active
+						a(href='/category')
+							i.material-icons widgets
+							p Category
+		.main-panel
+			nav.navbar.navbar-transparent.navbar-absolute
+				.container-fluid
+					.navbar-minimize
+						button#minimizeSidebar.btn.btn-round.btn-white.btn-fill.btn-just-icon
+							i.material-icons.visible-on-sidebar-regular more_vert
+							i.material-icons.visible-on-sidebar-mini view_list
+					.navbar-header
+						button.navbar-toggle(type='button' data-toggle='collapse')
+							span.sr-only Toggle navigation
+							span.icon-bar
+							span.icon-bar
+							span.icon-bar
+						a.navbar-brand(href='#')  Category manage
+					.collapse.navbar-collapse
+						ul.nav.navbar-nav.navbar-right
+							li
+								a.dropdown-toggle(href='/logout')
+									i.material-icons logout
+									p.hidden-lg.hidden-md Logout
+			.content
+				.row
+					.col-md-6.col-md-offset-3
+						h2.title(style='font-weight: bold;') Category Manage
+						button.btn.btn-info(type='button' rel='tooltip' data-original-title='' title='' style='float: right; margin-right: 20px;' onclick="demo.showSwal('add_category')")
+							i.material-icons add
+							| Add Category
+							.ripple-container
+					.col-md-6.col-md-offset-3
+						.card
+							.card-header.card-header-icon(data-background-color='rose')
+								i.material-icons toc
+							h3.card-title(style='font-weight: bold;') Category
+							.card-content
+								.table-responsive
+									table.table
+										thead
+											tr
+												th.text-center No
+												th Category Name
+												th Modify Time
+												th.text-right Actions
+										tbody
+											tr
+												td.text-center 1
+												td Andrew Mike
+												td 2013 1.28
+												td.td-actions.text-right
+													button.btn.btn-success(type='button' rel='tooltip' data-original-title='' title='' onclick="demo.showSwal('edit_category')")
+														i.material-icons edit
+														| Edit
+														.ripple-container
+													button.btn.btn-danger(type='button' rel='tooltip' data-original-title='' title='' onclick="demo.showSwal('delete_category')")
+														i.material-icons close
+														| Delete
+														.ripple-container
+			footer.footer
+				.container-fluid
+					p.copyright.pull-right
+						| &copy;
+						script.
+							document.write(new Date().getFullYear())
+						a(href='http://www.creative-tim.com') Creative Tim
+						| , made with love for a better web
+
+	//include account
+	include modals/alert
+	include modals/confirm
+
+block scripts
+	script(src='/js/views/category.js')
+	//script(src='/js/controllers/homeController.js')
+	//script(src='/js/form-validators/accountValidator.js')

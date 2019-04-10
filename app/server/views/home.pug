@@ -1,0 +1,132 @@
+extends main_layout
+
+block content
+    //nav.navbar.navbar-expand.navbar-light.bg-light
+    //    .nav-item
+    //        .navbar-brand Control Panel
+    //    .navbar-nav.ml-auto
+    //        .nav-item
+    //            button.btn.navbar-btn.btn-outline-dark#btn-logout Sign Out
+
+    .wrapper
+        nav#sectionsNav.navbar.navbar-info.navbar-fixed-top
+            .container-fluid
+                // Brand and toggle get grouped for better mobile display
+                .col-md-10.col-md-offset-1
+                    .navbar-header
+                        button.navbar-toggle(type='button' data-toggle='collapse' data-target='#navigation-example')
+                            span.sr-only Toggle navigation
+                            span.icon-bar
+                            span.icon-bar
+                            span.icon-bar
+                        img(src='images/logo.png' width='50px' style='float: left; margin-right: 10px;')
+                        a.navbar-brand(href='#')
+                            span(style='font-weight: bold;') Video Class
+                    #navigation-example.collapse.navbar-collapse
+                        form.navbar-form.navbar-right(role='search')
+                            .form-group.form-search.is-empty
+                                input.form-control(type='text' placeholder='Category')
+                                span.material-input
+                            .form-group.form-search.is-empty
+                                input.form-control(type='text' placeholder='Teacher')
+                                span.material-input
+                            .form-group.form-search.is-empty
+                                input.form-control(type='text' placeholder='Title')
+                                span.material-input
+                            button.btn.btn-white.btn-round.btn-just-icon(type='submit')
+                                i.material-icons search
+                                .ripple-container
+                        ul.nav.navbar-nav.navbar-right(style='margin-right: 100px ;')
+                            li
+                                a(href='index.html' style='font-size: 20px;')
+                                    i.material-icons(style='font-size: 30px;') home
+                                    |  Home
+                            li
+                                a(href='video.html' style='font-size: 20px;')
+                                    i.material-icons(style='font-size: 30px;') theaters
+                                    |  Most Visted video
+        .sidebar(data-active-color='rose' data-background-color='black' data-image='images/sidebar-1.jpg')
+            .logo
+                a.simple-text(href='index.html')
+                    | Video Class
+            .logo.logo-mini
+                a.simple-text(href='#')
+                    | Ct
+            .sidebar-wrapper
+                ul.nav(style='margin-top: 50px;')
+                    li.active
+                        a(href='#')
+                            i.material-icons dashboard
+                            p All Videos
+                    li
+                        a(data-toggle='collapse' href='#pagesExamples')
+                            i.material-icons filter_1
+                            p Math
+                    li
+                        a(data-toggle='collapse' href='#pagesExamples')
+                            i.material-icons filter_2
+                            p Physics
+                    li
+                        a(data-toggle='collapse' href='#pagesExamples')
+                            i.material-icons filter_3
+                            p Chemical
+                    li
+                        a(data-toggle='collapse' href='#componentsExamples')
+                            i.material-icons filter_4
+                            p Sports
+                    li
+                        a(data-toggle='collapse' href='#componentsExamples1')
+                            i.material-icons filter_5
+                            p Other
+        .main-panel
+            .content
+                .container-fluid
+                    h3 Recently Visited Videos
+                    .row
+                        .col-md-3
+                            .card(style='padding: 15px 15px 0px 15px;')
+                                div(data-header-animation='true')
+                                    a(href='detail.html')
+                                        .video(style='width: 100% ')
+                                            video(width='100%')
+                                                source(src='/uploads/city.webm' type='video/webm')
+                                                // <source src="preview.mp4" type="video/mp4">
+                                                | Your browser does not support HTML5 video.
+                                .card-content
+                                    h4.card-title
+                                        a(href='detail.html') Photoshop 30days
+                                    .card-description
+                                        | The place is close to Barceloneta Beach and bus stop just 2 min by walk and near to
+                                        | &quot;Naviglio&quot; where you can enjoy the main night life in Barcelona.
+                                .card-footer
+                                    .price
+                                        .stats.pull-right
+                                            p.category
+                                                i.material-icons face
+                                                |  Jane
+                                    .stats.pull-right
+                                        p.category
+                                            i.material-icons visibility
+                                            |  542
+                                    .stats.pull-right(style='margin-right: 20px;')
+                                        p.category
+                                            i.material-icons access_time
+                                            |  02:34
+            footer.footer
+                .container-fluid
+                    p.copyright.pull-right
+                        | &copy;
+                        script.
+                            document.write(new Date().getFullYear())
+                        a(href='#') Education video
+                        | , For only eduction
+
+
+    //include account
+    include modals/alert
+    include modals/confirm
+
+block scripts
+    //script(src='/js/views/home.js')
+    //script(src='/js/controllers/homeController.js')
+    //script(src='/js/form-validators/accountValidator.js')
