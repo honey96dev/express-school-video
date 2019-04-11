@@ -2,6 +2,7 @@
 var CT = require('./modules/country-list');
 var AM = require('./modules/account-manager');
 var EM = require('./modules/email-dispatcher');
+var CM = require('./modules/category-manager');
 function makeid(length) {
 	var text = "";
 	var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -13,9 +14,10 @@ function makeid(length) {
 }
 module.exports = function(app) {
 
-/*
-	login & logout
-*/
+/*====================================================
+	===========     administrator      ============
+======================================================*/
+/*home page*/
 	app.get('/', function(req, res){
 		// check if the user has an auto login key saved in a cookie //
 		// if (req.cookies.login == undefined){
@@ -35,7 +37,7 @@ module.exports = function(app) {
 		// }
 		res.render('home', { title: 'VideoClass' });
 	});
-
+/* administrator login page*/
 	app.get('/administrator', function(req, res){
 	// check if the user has an auto login key saved in a cookie //
 		if (req.cookies.login == undefined){
@@ -48,12 +50,12 @@ module.exports = function(app) {
 						res.redirect('/usermanage');
 					});
 				}	else{
-					res.render('login', { title: 'Login' });
+					res.render('adminlogin', { title: 'Login' });
 				}
 			});
 		}
 	});
-	
+
 	app.post('/administrator', function(req, res){
 		AM.manualLogin(req.body['email'], req.body['pass'], function(e, o){
 			if (!o){
@@ -80,131 +82,13 @@ module.exports = function(app) {
 		res.clearCookie('login');
 		req.session.destroy(function(e){ res.redirect('/'); });
 	})
-	
-/*
-	control panel
-*/
-	app.get('/usermanage', function(req, res) {
-		if (req.session.user == null){
-			res.redirect('/administrator');
-		}	else{
-			AM.getAllRecords( function(e, accounts){
-				res.render('usermanage', { title : 'User List', udata : accounts });
-			})
-		}
-	});
 
-	app.post('/usermanage', function(req, res){
-
-		var token = makeid(6);
-		console.log(token);
-		AM.addNewAccount({
-			name 	: req.body['name'],
-			email 	: req.body['email'],
-			pass	: token,
-			token	: token,
-			// contactnum : req.body['contactnum'],
-			// institution : req.body['institution'],
-			is_admin : 0
-
-		}, function(e){
-			if (e){
-				res.status(400).send(e);
-			}	else{
-				res.status(200).send('ok');
-			}
-		});
-	});
-
-
-	app.get('/fetchdata', function(req, res, next) {
-		var id = req.query.id;
-		AM.getUserbyId(id,function(e, obj){
-			res.send(obj);
-		})
-		// db.collection('products').find({_id: new mongodb.ObjectID(id)}).toArray(function(err, docs){
-		// 	if(err) throw err;
-		// 	res.send(docs);
-		// 	db.close();
-		// });
-	});
-	// app.get('/emailcheck', function(req, res, next) {
-	// 	var email = req.query.email;
-	// 	AM.getUserbyEmail(email,function(e, obj){
-	// 		res.send(obj);
-	// 	})
-	// });
-	app.post('/updateuser', function(req, res){
-		if (req.session.user == null){
-			res.redirect('/');
-		}	else{
-			console.log(req.body['id']);
-			AM.updateAccount({
-				id		: req.body['id'],
-				name	: req.body['name'],
-				email	: req.body['email']
-			}, function(e, o){
-				if (e){
-					res.status(400).send('error-updating-account');
-				}	else{
-					req.session.user = o.value;
-					res.status(200).send('ok');
-				}
-			});
-		}
-	});
-
-	app.get('/category', function(req, res) {
-		if (req.session.user == null){
-			res.redirect('/administrator');
-		}	else{
-			AM.getAllRecords( function(e, accounts){
-				res.render('category', { title : 'Category List', udata : accounts });
-			})
-		}
-	});
-
-	// app.get('/home', function(req, res) {
-	// 	if (req.session.user == null){
-	// 		res.redirect('/');
-	// 	}	else{
-	// 		res.render('home', {
-	// 			title : 'Video Class',
-	// 			countries : CT,
-	// 			udata : req.session.user
-	// 		});
-	// 	}
-	// });
-	//
-	// app.post('/home', function(req, res){
-	// 	if (req.session.user == null){
-	// 		res.redirect('/');
-	// 	}	else{
-	// 		AM.updateAccount({
-	// 			id		: req.session.user._id,
-	// 			name	: req.body['name'],
-	// 			email	: req.body['email'],
-	// 			pass	: req.body['pass'],
-	// 			country	: req.body['country']
-	// 		}, function(e, o){
-	// 			if (e){
-	// 				res.status(400).send('error-updating-account');
-	// 			}	else{
-	// 				req.session.user = o.value;
-	// 				res.status(200).send('ok');
-	// 			}
-	// 		});
-	// 	}
-	// });
-
-/*
-	new accounts
-*/
-
+	/* administrator registration*/
 	app.get('/signup', function(req, res) {
 		res.render('signup', {  title: 'Signup', countries : CT });
 	});
-	
+
+	/* registration administrator*/
 	app.post('/signup', function(req, res){
 
 		AM.addNewAccount({
@@ -225,9 +109,212 @@ module.exports = function(app) {
 		});
 	});
 
-/*
-	password reset
-*/
+
+	/*====================================================
+        ===========     User manage    ============
+    ======================================================*/
+/*user manage page*/
+	app.get('/usermanage', function(req, res) {
+		console.log(req.session.user)
+		if (req.session.user == null){
+			res.redirect('/administrator');
+		} else if(req.session.user.is_admin != 1){
+			res.redirect('/administrator');
+		}	else{
+			AM.getAllRecords( function(e, accounts){
+				res.render('usermanage', { title : 'User List', udata : accounts });
+			})
+		}
+	});
+/*user add*/
+	app.post('/usermanage', function(req, res){
+
+		var token = makeid(6);
+		AM.addNewAccount({
+			name 	: req.body['name'],
+			email 	: req.body['email'],
+			pass	: token,
+			token	: token,
+			// contactnum : req.body['contactnum'],
+			// institution : req.body['institution'],
+			is_admin : 0
+
+		}, function(e){
+			if (e){
+				res.status(400).send(e);
+			}	else{
+				res.status(200).send('ok');
+			}
+		});
+	});
+
+/* get specific user */
+	app.get('/fetchdata', function(req, res, next) {
+		var id = req.query.id;
+		AM.getUserbyId(id,function(e, obj){
+			res.send(obj);
+		})
+	});
+/* update user*/
+	app.post('/updateuser', function(req, res){
+		if (req.session.user == null){
+			res.redirect('/');
+		}	else{
+
+			AM.updateAccount({
+				id		: req.body['id'],
+				name	: req.body['name'],
+				email	: req.body['email']
+			}, function(e, o){
+				if (e){
+					res.status(400).send('error-updating-account');
+				}	else{
+					// req.session.user = o.value;
+					res.status(200).send('ok');
+				}
+			});
+		}
+	});
+
+/* user delete*/
+	app.get('/userdel', function(req, res){
+		AM.deleteAccount(req.query.id, function(e, obj){
+			if (!e){
+				// res.clearCookie('login');
+				// req.session.destroy(function(e){ res.status(200).send('ok'); });
+				res.redirect('/usermanage');
+			}	else{
+				res.status(400).send('record not found');
+			}
+		});
+	});
+
+	/*====================================================
+        ===========     Category     ============
+    ======================================================*/
+	/* category manage page*/
+	app.get('/category', function(req, res) {
+		if (req.session.user == null){
+			res.redirect('/administrator');
+		}	else{
+			CM.getAllRecords( function(e, categorys){
+				res.render('category', { title : 'Category List', cdata : categorys });
+			})
+		}
+	});
+/* add category*/
+	app.post('/category', function(req, res){
+
+		CM.addNewCategory({
+			name 	: req.body['name']
+
+		}, function(e){
+			if (e){
+				res.status(400).send(e);
+			}	else{
+				res.redirect('/category');
+			}
+		});
+	});
+/*get specific category*/
+	app.get('/fetchcategorydata', function(req, res, next) {
+		var id = req.query.id;
+		CM.getcategorysbyId(id,function(e, obj){
+			res.send(obj);
+		})
+	});
+	/* update category*/
+	app.post('/updatecategory', function(req, res){
+		if (req.session.user == null){
+			res.redirect('/');
+		}	else{
+			CM.updateCategory({
+				id		: req.body['id'],
+				name	: req.body['name']
+			}, function(e, o){
+				if (e){
+					res.status(400).send('error-updating-account');
+				}	else{
+					// req.session.user = o.value;
+					res.status(200).send('ok');
+				}
+			});
+		}
+	});
+/* delete category */
+	app.get('/categorydel', function(req, res){
+		CM.deleteCategory(req.query.id, function(e, obj){
+			if (!e){
+				res.redirect('/category');
+			}	else{
+				res.status(400).send('record not found');
+			}
+		});
+	});
+
+	/*====================================================
+        ===========     teacher login     ============
+    ======================================================*/
+/* teacher login*/
+	app.get('/user', function(req, res){
+		// check if the user has an auto login key saved in a cookie //
+		if (req.cookies.login == undefined){
+			res.render('login', { title: 'Login' });
+		}	else{
+			AM.validateLoginKey(req.cookies.login, req.ip, function(e, o){
+				if (o){
+					AM.autoLogin(o.user, o.pass, function(o){
+						req.session.user = o;
+						res.redirect('/myvideo');
+					});
+				}	else{
+					res.render('login', { title: 'Login' });
+				}
+			});
+		}
+	});
+/* logined control*/
+	app.post('/user', function(req, res){
+		AM.teacherLogin(req.body['email'], req.body['pass'], function(e, o){
+
+			console.log(o)
+			if (!o){
+				res.status(400).send(e);
+			}	else{
+
+				req.session.user = o;
+				// if (req.body['remember-me'] == 'false'){
+				// 	res.status(200).send(o);
+				// }	else{
+				// 	AM.generateLoginKey(o.user, req.ip, function(key){
+				// 		res.cookie('login', key, { maxAge: 900000 });
+				// 		res.status(200).send(o);
+				// 	});
+				// }
+				AM.generateLoginKey(o.user, req.ip, function(key){
+					res.cookie('login', key, { maxAge: 900000 });
+					res.status(200).send(o);
+				});
+			}
+		});
+	});
+
+	/*====================================================
+        ===========     My Video     ============
+    ======================================================*/
+	/* teacher my video page*/
+
+	app.get('/myvideo', function(req, res) {
+		if (req.session.user == null){
+			res.redirect('/login');
+		}	else{
+			AM.getAllRecords( function(e, accounts){
+				res.render('myvideo', { title : 'User List', udata : accounts });
+			})
+		}
+	});
+
+/* lost password*/
 
 	app.post('/lost-password', function(req, res){
 		let email = req.body['email'];
@@ -272,28 +359,7 @@ module.exports = function(app) {
 			}
 		})
 	});
-	
-/*
-	view, delete & reset accounts
-*/
-	//
-	// app.get('/print', function(req, res) {
-	// 	AM.getAllRecords( function(e, accounts){
-	// 		res.render('print', { title : 'Account List', accts : accounts });
-	// 	})
-	// });
-	//
-	app.get('/userdel', function(req, res){
-		AM.deleteAccount(req.query.id, function(e, obj){
-			if (!e){
-				// res.clearCookie('login');
-				// req.session.destroy(function(e){ res.status(200).send('ok'); });
-				res.redirect('/usermanage');
-			}	else{
-				res.status(400).send('record not found');
-			}
-		});
-	});
+
 	app.get('/active', function(req, res){
 		// AM.deleteAccount(req.query.id, function(e, obj){
 		// 	if (!e){

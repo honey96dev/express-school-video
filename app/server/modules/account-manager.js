@@ -2,6 +2,7 @@
 const crypto 		= require('crypto');
 const moment 		= require('moment');
 const MongoClient 	= require('mongodb').MongoClient;
+const EM = require('./email-dispatcher');
 
 var db, accounts;
 MongoClient.connect(process.env.DB_URL, { useNewUrlParser: true }, function(e, client) {
@@ -16,6 +17,7 @@ MongoClient.connect(process.env.DB_URL, { useNewUrlParser: true }, function(e, c
 	}
 });
 
+// const guid = function(){return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {var r = Math.random()*16|0,v=c=='x'?r:r&0x3|0x8;return v.toString(16);});}
 const guid = function(){return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {var r = Math.random()*16|0,v=c=='x'?r:r&0x3|0x8;return v.toString(16);});}
 
 /*
@@ -51,6 +53,22 @@ exports.manualLogin = function(email, pass, callback)
 }
 
 
+exports.teacherLogin = function(email, pass, callback)
+{
+	accounts.findOne({email:email}, function(e, o) {
+		if (o == null){
+			callback('user-not-found');
+		}	else{
+			validatePassword(pass, o.pass, function(err, res) {
+				if (res){
+					callback(null, o);
+				}	else{
+					callback('invalid-password');
+				}
+			});
+		}
+	});
+}
 exports.getUserbyId = function(id, callback)
 {
 
@@ -82,7 +100,9 @@ exports.validateLoginKey = function(cookie, ipAddress, callback)
 
 exports.generatePasswordKey = function(email, ipAddress, callback)
 {
-	let passKey = guid();
+	// let passKey = guid();
+	var token = makeid(6);
+	let passKey = token;
 	accounts.findOneAndUpdate({email:email}, {$set:{
 		ip : ipAddress,
 		passKey : passKey
@@ -134,7 +154,10 @@ exports.addNewAccount = function(newData, callback)
 				// append date stamp when record was created //
 				newData.date = moment().format('MMMM Do YYYY, h:mm:ss a');
 				accounts.insertOne(newData, callback);
+
+				EM.composeAddUserEmail(newData.email, newData.pass);
 			});
+
 		}
 	});
 }
@@ -148,6 +171,7 @@ exports.updateAccount = function(newData, callback)
 			email : data.email
 		}
 		if (data.pass) o.pass = data.pass;
+		data.udate = moment().format('MMMM Do YYYY, h:mm:ss a');
 		accounts.findOneAndUpdate({'_id':getObjectId(data.id)}, {$set:o}, {returnOriginal : false}, callback);
 	}
 	if (newData.pass == ''){

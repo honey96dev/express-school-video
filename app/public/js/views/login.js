@@ -1,5 +1,11 @@
 
 $(document).ready(function(){
+	demo.checkFullPageBackgroundImage();
+
+	setTimeout(function() {
+		// after 1000 ms we add the class animated to the login/register card
+		$('.card').removeClass('card-hidden');
+	}, 700)
 
 	var lv = new LoginValidator();
 	var lc = new LoginController();
@@ -22,8 +28,25 @@ $(document).ready(function(){
 		error : function(e){
 			lv.showLoginError('Login Failure', 'Please check your username and/or password');
 		}
-	}); 
+	});
 
+	$('#teacherlogin').ajaxForm({
+		beforeSubmit : function(formData, jqForm, options){
+			if (lv.validateForm() == false){
+				return false;
+			} 	else{
+				// append 'remember-me' option to formData to write local cookie //
+				formData.push({name:'remember-me', value:$('#btn_remember').find('span').hasClass('fa-check-square')});
+				return true;
+			}
+		},
+		success	: function(responseText, status, xhr, $form){
+			if (status == 'success') window.location.href = '/myvideo';
+		},
+		error : function(e){
+			lv.showLoginError('Login Failure', 'Please check your username and/or password');
+		}
+	});
 	$("input:text:visible:first").focus();
 	$('#btn_remember').click(function(){
 		var span = $(this).find('span');
@@ -43,7 +66,7 @@ $(document).ready(function(){
 	$('#get-credentials-form').ajaxForm({
 		url: '/lost-password',
 		beforeSubmit : function(formData, jqForm, options){
-			if (ev.validateEmail($('#email-tf').val())){
+			if (ev.validateEmail($('#lost-email-tf').val())){
 				ev.hideEmailAlert();
 				return true;
 			}	else{

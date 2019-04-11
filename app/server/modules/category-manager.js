@@ -16,40 +16,6 @@ MongoClient.connect(process.env.DB_URL, { useNewUrlParser: true }, function(e, c
 	}
 });
 
-// const guid = function(){return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {var r = Math.random()*16|0,v=c=='x'?r:r&0x3|0x8;return v.toString(16);});}
-
-/*
-	login validation methods
-*/
-
-// exports.autoLogin = function(user, pass, callback)
-// {
-// 	categorys.findOne({user:user}, function(e, o) {
-// 		if (o){
-// 			o.pass == pass ? callback(o) : callback(null);
-// 		}	else{
-// 			callback(null);
-// 		}
-// 	});
-// }
-//
-// exports.manualLogin = function(email, pass, callback)
-// {
-// 	categorys.findOne({email:email,is_admin:1}, function(e, o) {
-// 		if (o == null){
-// 			callback('user-not-found');
-// 		}	else{
-// 			validatePassword(pass, o.pass, function(err, res) {
-// 				if (res){
-// 					callback(null, o);
-// 				}	else{
-// 					callback('invalid-password');
-// 				}
-// 			});
-// 		}
-// 	});
-// }
-
 
 exports.getcategorysbyId = function(id, callback)
 {
@@ -62,44 +28,6 @@ exports.getUserbyName = function(name, callback)
 
 	categorys.findOne({'email':getObjectId(email)}, callback);
 }
-//
-// exports.generateLoginKey = function(user, ipAddress, callback)
-// {
-// 	let cookie = guid();
-// 	categorys.findOneAndUpdate({user:user}, {$set:{
-// 		ip : ipAddress,
-// 		cookie : cookie
-// 	}}, {returnOriginal : false}, function(e, o){
-// 		callback(cookie);
-// 	});
-// }
-//
-// exports.validateLoginKey = function(cookie, ipAddress, callback)
-// {
-// // ensure the cookie maps to the user's last recorded ip address //
-// 	categorys.findOne({cookie:cookie, ip:ipAddress}, callback);
-// }
-//
-// exports.generatePasswordKey = function(email, ipAddress, callback)
-// {
-// 	let passKey = guid();
-// 	categorys.findOneAndUpdate({email:email}, {$set:{
-// 		ip : ipAddress,
-// 		passKey : passKey
-// 	}, $unset:{cookie:''}}, {returnOriginal : false}, function(e, o){
-// 		if (o.value != null){
-// 			callback(null, o.value);
-// 		}	else{
-// 			callback(e || 'account not found');
-// 		}
-// 	});
-// }
-
-// exports.validatePasswordKey = function(passKey, ipAddress, callback)
-// {
-// // ensure the passKey maps to the user's last recorded ip address //
-// 	categorys.findOne({passKey:passKey, ip:ipAddress}, callback);
-// }
 
 /*
 	record insertion, update & deletion methods
@@ -107,34 +35,12 @@ exports.getUserbyName = function(name, callback)
 
 exports.addNewCategory = function(newData, callback)
 {
-	// categorys.findOne({user:newData.user}, function(e, o) {
-	// 	if (o){
-	// 		callback('username-taken');
-	// 	}	else{
-	// 		categorys.findOne({email:newData.email}, function(e, o) {
-	// 			if (o){
-	// 				callback('email-taken');
-	// 			}	else{
-	// 				saltAndHash(newData.pass, function(hash){
-	// 					newData.pass = hash;
-	// 				// append date stamp when record was created //
-	// 					newData.date = moment().format('MMMM Do YYYY, h:mm:ss a');
-	// 					categorys.insertOne(newData, callback);
-	// 				});
-	// 			}
-	// 		});
-	// 	}
-	// });
+
 	categorys.findOne({name:newData.name}, function(e, o) {
 		if (o){
 			callback('email-taken');
 		}	else{
-			// saltAndHash(newData.pass, function(hash){
-			// 	newData.pass = hash;
-			// 	// append date stamp when record was created //
-			// 	newData.date = moment().format('MMMM Do YYYY, h:mm:ss a');
-			// 	categorys.insertOne(newData, callback);
-			// });
+
 			newData.date = moment().format('MMMM Do YYYY, h:mm:ss a');
 			categorys.insertOne(newData, callback);
 		}
@@ -145,19 +51,21 @@ exports.updateCategory = function(newData, callback)
 {
 	let findOneAndUpdate = function(data){
 		var o = {
-			name : data.name,
+			name : data.name
 			// email : data.email
 		}
-		if (data.pass) o.pass = data.pass;
+		//if (data.pass) o.pass = data.pass;
+
 		data.date = moment().format('MMMM Do YYYY, h:mm:ss a');
 		categorys.findOneAndUpdate({'_id':getObjectId(data.id)}, {$set:o}, {returnOriginal : false}, callback);
 	}
+	findOneAndUpdate(newData);
 	// if (newData.pass == ''){
 	// 	findOneAndUpdate(newData);
 	// }	else {
 	// 	saltAndHash(newData.pass, function(hash){
 	// 		newData.pass = hash;
-	// 		findOneAndUpdate(newData);
+	//
 	// 	});
 	// }
 }

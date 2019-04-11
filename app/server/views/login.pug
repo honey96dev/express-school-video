@@ -1,83 +1,73 @@
-
-extends layout
+extends main_layout
 block content
-	.container
-		.row
-			.col-md-8
-				section#login
-					h1.entry-title
-						span Sign In
-					hr
-					form#signin.form-horizontal(method='post')
-						.form-group
-							label.control-label.col-sm-3
-								| Email ID
-								span.text-danger *
-							.col-md-6.col-sm-9
-								.input-group
-									span.input-group-addon
-										i.glyphicon.glyphicon-envelope
-									input.form-control(type='email' id='email-tf' name='email' placeholder='Enter your Email ID' value='')
-								//small
-								//	| Your Email Id is being used for ensuring the security of your account, authorization
-								//	| and access recovery.
-						.form-group
-							label.control-label.col-sm-3
-								| Password
-								span.text-danger *
-							.col-md-6.col-sm-8
-								.input-group
-									span.input-group-addon
-										i.glyphicon.glyphicon-lock
-									input.form-control(type='password' id='pass-tf' name='pass' placeholder='Choose password (5-15 chars)' value='')
-						//.form-group
-						//	.col-xs-offset-3.col-md-8.col-sm-9
-						//		span.text-muted
-						//			span.label.label-danger Note:-
-						//			|  By clicking Sign Up, you agree to our
-						//			a(href='#') Terms
-						//			|  and that you have read our
-						//			a(href='#') Policy
-						//			| , including our
-						//			a(href='#') Cookie Use
-						//			| .
-						.form-group
-							.col-xs-offset-3.col-md-2
-								input.btn.btn-primary(name='Submit' type='submit' value='Sign In')
-							#create-account.col-md-2
-								a.btn.btn-success(href='/signup') Sign Up
-							#forgot-password.col-md-2
-								a(href='#') reset password
+    nav.navbar.navbar-primary.navbar-transparent.navbar-absolute
+        .container
+            .navbar-header
+                button.navbar-toggle(type='button' data-toggle='collapse' data-target='#navigation-example-2')
+                    span.sr-only Toggle navigation
+                    span.icon-bar
+                    span.icon-bar
+                    span.icon-bar
+                a.navbar-brand(href='/') Video Class
+            .collapse.navbar-collapse
+                ul.nav.navbar-nav.navbar-right
+                    li
+                        a(href='/')
+                            i.material-icons home
+                            |  Home
+    .wrapper.wrapper-full-page
+        .full-page.login-page(filter-color='black' data-image='/images/lock.jpeg')
+            // you can change the color of the filter page using: data-color="blue | purple | green | orange | red | rose "
+            .content#teacherlogin
+                .container
+                    .row
+                        .col-md-4.col-sm-6.col-md-offset-4.col-sm-offset-3
+                            form#signup.form-horizontal(method='post')
+                                .card.card-login.card-hidden
+                                    .card-header.text-center(data-background-color='rose')
+                                        h4.card-title Login
+                                        .social-line
 
-	//#login.center-vertical
-	//	form.card.card-body.bg-light(method='post')
-	//		h2 Hello!
-	//		h6 Please Login To Your Account
-	//		.form-group
-	//			label Username
-	//			input.form-control(type='text', id='user-tf', name='user')
-	//		.form-group
-	//			label Password
-	//			input.form-control(type='password', id='pass-tf', name='pass')
-	//		#row1
-	//			button(type='button')#btn_remember.btn.btn-light.btn-left
-	//				span.fa.fa-check-square
-	//				| Remember Me
-	//			button(type='submit')#btn_sign_in.btn.btn-primary
-	//				span.fa.fa-lock
-	//				| Sign In
-	//		hr
-	//		.btm-links
-	//			#forgot-password
-	//				a(href='#') Forgot Your Password?
-	//			#create-account
-	//				a(href='/signup') Create An Account
+                                    p.category.text-center
+                                        | Visit Our Class
+                                    .card-content
+                                        .input-group
+                                            span.input-group-addon
+                                                i.material-icons email
+                                            .form-group.label-floating
+                                                label.control-label Email address
+                                                input.form-control(type='email' id='email-tf' name='email' value='')
+                                        .input-group
+                                            span.input-group-addon
+                                                i.material-icons lock_outline
+                                            .form-group.label-floating
+                                                label.control-label Password
+                                                input.form-control(type='password' id='pass-tf' name='pass' value='')
+                                    .footer.text-center
+                                        //button.btn.btn-rose.btn-simple.btn-wd.btn-lg(type='submit') Let&apos;s go
+                                        .form-group
+                                            .col-md-12
+                                                input.btn.btn-rose.btn-simple.btn-wd.btn-lg(name='Submit' type='submit' value='Sign In')
+                                            //#create-account.text-left.col-md-4
+                                            //    a.btn.btn-rose.btn-simple.btn-wd.btn-lg(href='/signup') Sign Up
 
-	include modals/alert
-	include modals/lost-password
+                                            #forgot-password.col-md-12
+                                                a.btn.btn-rose.btn-simple.btn-wd.btn-lg(href='#') reset password
+            footer.footer
+                .container
+                    p.copyright.pull-right
+                        | &copy;
+                        script.
+                            document.write(new Date().getFullYear())
+                        a(href='') Video Class
+                        | , made with love for a better web
+
+    include modals/alert
+    include modals/lost-password
 
 block scripts
-	script(src='/js/views/login.js')
-	script(src='/js/controllers/loginController.js')
-	script(src='/js/form-validators/loginValidator.js')
-	script(src='/js/form-validators/emailValidator.js')
+    script(src='/javascripts/demo.js')
+    script(src='/js/views/login.js')
+    script(src='/js/controllers/loginController.js')
+    script(src='/js/form-validators/loginValidator.js')
+    script(src='/js/form-validators/emailValidator.js')

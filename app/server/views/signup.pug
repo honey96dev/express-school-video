@@ -1,84 +1,80 @@
 
-extends layout
+extends main_layout
 
 block content
-	.container
-		.row
-			.col-md-8
-				section#account-form-container
-					h1.entry-title
-						span Sign Up
-					hr
-					form#account-form.form-horizontal(method='post')
-						.form-group
-							label.control-label.col-sm-3
-								| Incluya Corroe
-								span.text-danger *
-							.col-md-5.col-sm-9
-								.input-group
-									span.input-group-addon
-										i.glyphicon.glyphicon-envelope
-									input#email-tf.form-control(type='email' name='email' placeholder='Enter your Email ID' value='')
-								//small
-								//	| Your Email Id is being used for ensuring the security of your account, authorization and access recovery.
-						.form-group
-							label.control-label.col-sm-3
-								| Password
-								span.text-danger *
-							.col-md-5.col-sm-8
-								.input-group
-									span.input-group-addon
-										i.glyphicon.glyphicon-lock
-									input#pass-tf.form-control(type='password' name='pass' placeholder='Choose password (5-15 chars)' value='')
-						.form-group
-							label.control-label.col-sm-3
-								| Confirm Password
-								span.text-danger *
-							.col-md-5.col-sm-8
-								.input-group
-									span.input-group-addon
-										i.glyphicon.glyphicon-lock
-									input#cpassword.form-control(type='password' name='cpassword' placeholder='Confirm your password' value='')
-						.form-group
-							label.control-label.col-sm-3
-								| Celular
-								span.text-danger *
-							.col-md-5.col-sm-8
-								.input-group
-									span.input-group-addon
-										i.glyphicon.glyphicon-phone
-									input#contactnum-tf.form-control(type='text' name='contactnum' placeholder='Enter your Primary contact no.' value='')
-						.form-group
-							label.control-label.col-sm-3
-								| Nombre De Escuela
-								span.text-danger *
-							.col-md-5.col-sm-8
-								input#institution-tf.form-control(type='text' name='institution' placeholder='institution' value='')
-						//.form-group
-						//	label.control-label.col-sm-3 Security Code
-						//	.col-md-5.col-sm-8
-						//		div
-						//			input#captcha.form-control.label-warning(type='text' name='captcha')
-						//.form-group
-						//	.col-xs-offset-3.col-md-8.col-sm-9
-						//		span.text-muted
-						//			span.label.label-danger Note:-
-						//			|  By clicking Sign Up, you agree to our
-						//			a(href='#') Terms
-						//			|  and that you have read our
-						//			a(href='#') Policy
-						//			| , including our
-						//			a(href='#') Cookie Use
-						//			| .
-						.form-group
-							.col-xs-offset-3.col-xs-10
-								input#account-form-btn2.btn.btn-primary(name='Submit' type='submit' value='Sign Up')
+	nav.navbar.navbar-primary.navbar-transparent.navbar-absolute
+		.container
+			.navbar-header
+				button.navbar-toggle(type='button' data-toggle='collapse' data-target='#navigation-example-2')
+					span.sr-only Toggle navigation
+					span.icon-bar
+					span.icon-bar
+					span.icon-bar
+				a.navbar-brand(href='/') Video Class
+			.collapse.navbar-collapse
+				ul.nav.navbar-nav.navbar-right
+					li
+						a(href='/')
+							i.material-icons home
+							|  Home
+	.wrapper.wrapper-full-page
+		.full-page.register-page(filter-color='black' data-image='/images/register.jpeg')
+			.container#account-form-container
+				.row
+					.col-md-6.col-md-offset-3
+						.card.card-signup
+							h2.card-title.text-center Register
+							.row
+								.col-md-12
+									form#account-form.form-horizontal(method='post')
+										.card-content
+											.input-group
+												span.input-group-addon
+													i.material-icons email
+												input#email-tf.form-control(type='email' name='email' placeholder='Enter your Email ID' value='')
+											.input-group
+												span.input-group-addon
+													i.material-icons lock_outline
+												input#pass-tf.form-control(type='password' name='pass' placeholder='Password...' value='')
+											//.input-group
+											//	span.input-group-addon
+											//		i.material-icons lock_outline
+											//	input#pass-tf.form-control(type='password' name='pass' placeholder='Password...' value='')
+											// If you want to add a checkbox to this form, uncomment this code
+											.input-group
+												span.input-group-addon
+													i.material-icons phone
+												input#contactnum-tf.form-control(type='text' name='contactnum' placeholder='Enter your Primary contact no.' value='')
+											.input-group
+												span.input-group-addon
+													i.material-icons business
+												input#institution-tf.form-control(type='text' name='institution' placeholder='institution' value='')
+
+											//
+											//.checkbox
+											//	label
+											//		input(type='checkbox' name='optionsCheckboxes' checked='')
+											//		|  I agree to the
+											//		a(href='#something') terms and conditions
+											//		| .
+										.footer.text-center
+											//a.btn.btn-primary.btn-round(href='#pablo') Get Started
+											input#account-form-btn2.btn.btn-primary.btn-round(name='Submit' type='submit' value='Sign Up')
+			footer.footer
+				.container
+					p.copyright.pull-right
+						| &copy;
+						script.
+							document.write(new Date().getFullYear())
+						a(href='/') Creative Tim
+						| , made with love for a better web
 
 	//include account
 	include modals/form-errors
 	include modals/alert
 
 block scripts
+	script(src='/javascripts/demo.js')
 	script(src='/js/views/signup.js')
 	script(src='/js/controllers/signupController.js')
 	script(src='/js/form-validators/accountValidator.js')
